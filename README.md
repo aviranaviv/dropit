@@ -3,8 +3,8 @@
 ## Installation
 
 1. Clone the current repository by either:
-    - Option 1: `git clone git@github.com:aviranaviv/moon-active.git`
-    - Option 2: Go to the [Git repository](https://github.com/aviranaviv/moon-active) and clone it from there.
+    - Option 1: `git clone https://github.com/aviranaviv/dropit.git`
+    - Option 2: Go to the [Git repository](https://github.com/aviranaviv/dropit) and clone it from there.
 2. Ensure that you have Node.js version 20.12.0 or higher installed.
 3. Open a terminal or command window in the cloned directory.
 4. Run `npm install` and wait for the installation to complete.
