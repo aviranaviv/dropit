@@ -62,7 +62,7 @@ export default class Products extends PageObject{
     async addProductToCart(size: ProductSize, amount: number): Promise<void> {
         await this.selectProductSize(size);
         await this.setProductQuantity(amount);
-        await this.addToCartButton.click({timeout: 2000});
+        await this.addToCartButton.click({timeout: 4000});
     }
 
     async closeCartNotification(): Promise<void> {
