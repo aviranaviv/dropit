@@ -1,3 +1,5 @@
 export default {
-    shopifyLogin: '/password'
+    shopifyLogin: 'password',
+    catalog: 'collections/all',
+    cart: 'cart'
 };
