@@ -41,7 +41,7 @@ let cartPage: Cart;
 let checkOutsPage: CheckOut;
 let totalQuantity = 0;
 
-test.describe('Buy Products', () => {
+test.describe('MyShopify - Buy Products', () => {
     test.beforeEach(async ({ page }) => {
         navigationBar = new Navigation(page);
         productsPage = new Products(page);
