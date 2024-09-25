@@ -21,7 +21,7 @@ export class ProductsApi {
 
             const status = response.status();
             if (status !== 200 ) {
-                throw new Error(`Failed to add to cart status code ${status}`);
+                throw new Error(`Failed to add to cart, status code: ${status}`);
             }
 
             return response.json();

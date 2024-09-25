@@ -3,6 +3,7 @@ import {expect, test} from 'playwright/test';
 import {ProductAssertions} from '@/modules/products/assertions';
 import {ProductSize} from '@/modules/products/constants';
 import {ProductsApi} from '@/modules/products/products';
+import { CheckOutApi } from "@/modules/check-out/check-out";
 import Cart from '@/page-object/cart';
 import CheckOut from '@/page-object/check-out';
 import Navigation from '@/page-object/navigation';
@@ -10,15 +11,16 @@ import Products from '@/page-object/products';
 import { scrollToTheTop } from '@/utils/utils';
 
 import init from '../../src/infrastructure/init';
-import {Page} from "@playwright/test";
 
 const productApi = ProductsApi.getInstance();
+const checkOutApi = CheckOutApi.getInstance();
 const products = ['Dropit Hamburger (QA Automation)', 'Dropit Chips (QA Automation)'];
 
 let navigationBar: Navigation;
 let productsPage: Products;
 let cartPage: Cart;
 let checkOutsPage: CheckOut;
+let totalQuantity = 0;
 
 test.describe('Buy Products',  () => {
     test.beforeEach(async ({page}) => {
@@ -41,16 +43,24 @@ test.describe('Buy Products',  () => {
         await navigationBar.goToCatalogSection();
 
         for (const scenario of productScenarios) {
+            await scrollToTheTop(page);
+
             if (scenario.productTitle !== productScenarios[productScenarios.indexOf(scenario) - 1]?.productTitle) {
                 await navigationBar.searchProducts(scenario.productTitle);
                 await productsPage.validateProductTitle(scenario.productTitle);
             }
 
+            totalQuantity += scenario.quantity;
             await productsPage.addProductToCart(scenario.size, scenario.quantity);
             const addToCartResponse = await productApi.addToCartResponse(page);
+
             ProductAssertions.validateProductAddedToCart(addToCartResponse, scenario);
+
             await productsPage.closeCartNotification();
         }
+
+        const expectedCartCount = totalQuantity;
+        await expect(navigationBar.cartCount).toHaveText(expectedCartCount.toString());
 
         await navigationBar.goToCart();
         await cartPage.goToCheckOut();
@@ -71,6 +81,7 @@ test.describe('Buy Products',  () => {
 
         await checkOutsPage.fillRequiredFields(formAndPaymentData);
         await checkOutsPage.payNowButton.click();
+        const submitForCompletionResponse = await checkOutApi.submitCompletionResponse(page);
 
         await expect(checkOutsPage.confirmedOrderMessage).toBeVisible();
     });

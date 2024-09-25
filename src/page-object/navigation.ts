@@ -8,6 +8,7 @@ export default class Navigation extends PageObject{
     readonly searchIcon: Locator = this.page.getByRole('button', { name: 'Search', exact: true });
     readonly searchBar: Locator = this.page.locator('predictive-search #Search-In-Modal');
     readonly cartIcon: Locator = this.page.locator('#cart-icon-bubble');
+    readonly cartCount: Locator = this.cartIcon.locator('.cart-count-bubble [aria-hidden="true"]');
 
     async goToCatalogSection(): Promise<void> {
         await this.catalog.click();
