@@ -1,4 +1,4 @@
-import {expect, test} from 'playwright/test';
+import { expect, test } from 'playwright/test';
 
 import { CheckOutsAssertions } from '@/modules/check-out/assertions';
 import { CheckOutApi } from '@/modules/check-out/check-out';
@@ -16,6 +16,7 @@ import init from '../../src/infrastructure/init';
 const productApi = ProductsApi.getInstance();
 const checkOutApi = CheckOutApi.getInstance();
 const products = ['Dropit Hamburger (QA Automation)', 'Dropit Chips (QA Automation)'];
+
 const productScenarios = [
     { productTitle: products[0], size: ProductSize.Medium, quantity: 2 },
     { productTitle: products[0], size: ProductSize.SoLargeYouCantEatIt, quantity: 1 },
@@ -40,12 +41,13 @@ let cartPage: Cart;
 let checkOutsPage: CheckOut;
 let totalQuantity = 0;
 
-test.describe('Buy Products',  () => {
-    test.beforeEach(async ({page}) => {
+test.describe('Buy Products', () => {
+    test.beforeEach(async ({ page }) => {
         navigationBar = new Navigation(page);
         productsPage = new Products(page);
         cartPage = new Cart(page);
         checkOutsPage = new CheckOut(page);
+        totalQuantity = 0;
 
         await init(page);
     });
@@ -69,8 +71,7 @@ test.describe('Buy Products',  () => {
             await productsPage.closeCartNotification();
         }
 
-        const expectedCartCount = totalQuantity;
-        await expect(navigationBar.cartCount).toHaveText(expectedCartCount.toString());
+        await expect(navigationBar.cartCount).toHaveText(totalQuantity.toString());
 
         await navigationBar.goToCart();
         const expectedCartTotalPrice = '£33.00 GBP';
@@ -90,7 +91,7 @@ test.describe('Buy Products',  () => {
             amountOfProducts: productScenarios.length
         };
 
-        CheckOutsAssertions.validateOrderIsComplete(submitForCompletionResponse, expectedOrderValues );
+        CheckOutsAssertions.validateOrderIsComplete(submitForCompletionResponse, expectedOrderValues);
         await expect(checkOutsPage.confirmedOrderMessage).toBeVisible();
     });
 
@@ -114,7 +115,6 @@ test.describe('Buy Products',  () => {
         await expect(cartPage.totalPrice).toHaveText('£13.00 GBP');
 
         await cartPage.goToCheckOut();
-
         const invalidData = {
             ...formAndPaymentData,
             email: 'fake',
@@ -124,9 +124,7 @@ test.describe('Buy Products',  () => {
         await checkOutsPage.fillRequiredFields(invalidData);
         await checkOutsPage.payNowButton.click();
 
-        await expect(checkOutsPage.invalidEmailErrorMessage).toHaveText('Enter a valid email');
-        await expect(checkOutsPage.invalidEmailErrorMessage).toHaveCSS('color', 'rgb(221, 29, 29)');
-        await expect(checkOutsPage.cardNumberErrorMessage).toHaveText('Enter a card number');
-        await expect(checkOutsPage.cardNumberErrorMessage).toHaveCSS('color', 'rgb(221, 29, 29)');
+        const expectedErrorMessages = ['Enter a valid email', 'Enter a card number'];
+        await checkOutsPage.validateErrorMessage(expectedErrorMessages);
     });
 });

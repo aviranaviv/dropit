@@ -1,4 +1,5 @@
 import {Locator} from '@playwright/test';
+import {expect} from 'playwright/test';
 
 import PageObject from '@/page-object/index';
 
@@ -26,8 +27,7 @@ export default class CheckOut extends PageObject {
 
     readonly payNowButton: Locator = this.formContainer.locator('#checkout-pay-button');
     readonly confirmedOrderMessage: Locator = this.page.getByRole('heading', { name: 'Your order is confirmed', exact: true });
-    readonly invalidEmailErrorMessage: Locator = this.page.locator('#error-for-email' );
-    readonly cardNumberErrorMessage: Locator = this.page.locator('#error-for-number');
+    readonly getErrorMessageByText = (errorText: string) => this.page.getByText(errorText, { exact: true });
 
     async fillRequiredFields (options: {
         email: string,
@@ -47,5 +47,12 @@ export default class CheckOut extends PageObject {
         await this.expirationData.fill(options.expirationData);
         await this.securityCode.fill(options.securityCode);
         await this.nameOnCard.fill(options.nameOnCard);
+    }
+
+    async validateErrorMessage(errorsMessageText: string[]): Promise<void> {
+        for (const error of errorsMessageText) {
+            await expect(this.getErrorMessageByText(error)).toHaveText(error);
+            await expect(this.getErrorMessageByText(error)).toHaveCSS('color', 'rgb(221, 29, 29)');
+        }
     }
 }
