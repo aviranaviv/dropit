@@ -49,7 +49,7 @@ export default class CheckOut extends PageObject {
         await this.nameOnCard.fill(options.nameOnCard);
     }
 
-    async validateErrorMessage(errorsMessageText: string[]): Promise<void> {
+    async validateFormErrorMessage(errorsMessageText: string[]): Promise<void> {
         for (const error of errorsMessageText) {
             await expect(this.getErrorMessageByText(error)).toHaveText(error);
             await expect(this.getErrorMessageByText(error)).toHaveCSS('color', 'rgb(221, 29, 29)');

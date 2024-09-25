@@ -1,6 +1,6 @@
 import {Page} from '@playwright/test';
 
-import siteEndpoints from '@/infrastructure/site-endpoints';
+import siteEndpoints from '@/infrastructure/myshopify-site-endpoints';
 import {submitForCompletionResponseTypes} from '@/modules/check-out/response/types';
 
 export class CheckOutApi {

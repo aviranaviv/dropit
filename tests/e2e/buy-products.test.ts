@@ -125,6 +125,6 @@ test.describe('Buy Products', () => {
         await checkOutsPage.payNowButton.click();
 
         const expectedErrorMessages = ['Enter a valid email', 'Enter a card number'];
-        await checkOutsPage.validateErrorMessage(expectedErrorMessages);
+        await checkOutsPage.validateFormErrorMessage(expectedErrorMessages);
     });
 });
