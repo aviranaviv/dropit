@@ -13,7 +13,9 @@ export default defineConfig({
     projects: [
         {
             name: 'Google Chrome',
-            use: { ...devices['Desktop Chrome'], channel: 'chrome', viewport: { width: 1920, height: 1080 } }
+            use: { ...devices['Desktop Chrome'],
+            channel: 'chrome',
+            viewport: { width: 1920, height: 1080 } }
         }
     ]
 });
