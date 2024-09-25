@@ -7,8 +7,10 @@ import Cart from '@/page-object/cart';
 import CheckOut from '@/page-object/check-out';
 import Navigation from '@/page-object/navigation';
 import Products from '@/page-object/products';
+import { scrollToTheTop } from '@/utils/utils';
 
 import init from '../../src/infrastructure/init';
+import {Page} from "@playwright/test";
 
 const productApi = ProductsApi.getInstance();
 const products = ['Dropit Hamburger (QA Automation)', 'Dropit Chips (QA Automation)'];
@@ -39,10 +41,6 @@ test.describe('Buy Products',  () => {
         await navigationBar.goToCatalogSection();
 
         for (const scenario of productScenarios) {
-            await page.evaluate(() => {
-                window.scrollTo(0, 0);
-            });
-
             if (scenario.productTitle !== productScenarios[productScenarios.indexOf(scenario) - 1]?.productTitle) {
                 await navigationBar.searchProducts(scenario.productTitle);
                 await productsPage.validateProductTitle(scenario.productTitle);
@@ -59,6 +57,21 @@ test.describe('Buy Products',  () => {
 
         const expectedTotalPrice = '£56.99';
         await expect(checkOutsPage.getTotalPrice(expectedTotalPrice)).toHaveText(expectedTotalPrice);
-        await checkOutsPage.emailInput.fill('blablabla');
+
+        const formAndPaymentData = {
+            email: 'fake@fake.com',
+            lastname: 'bob',
+            address: 'fake address',
+            city: 'fake city',
+            cardNumber: '1',
+            expirationData: '12/26',
+            securityCode: '777',
+            nameOnCard: 'Bogus Gateway'
+        };
+
+        await checkOutsPage.fillRequiredFields(formAndPaymentData);
+        await checkOutsPage.payNowButton.click();
+
+        await expect(checkOutsPage.confirmedOrderMessage).toBeVisible();
     });
 });
