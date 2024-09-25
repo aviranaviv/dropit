@@ -26,6 +26,8 @@ export default class CheckOut extends PageObject {
 
     readonly payNowButton: Locator = this.formContainer.locator('#checkout-pay-button');
     readonly confirmedOrderMessage: Locator = this.page.getByRole('heading', { name: 'Your order is confirmed', exact: true });
+    readonly invalidEmailErrorMessage: Locator = this.page.locator('#error-for-email' );
+    readonly cardNumberErrorMessage: Locator = this.page.locator('#error-for-number');
 
     async fillRequiredFields (options: {
         email: string,

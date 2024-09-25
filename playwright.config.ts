@@ -1,4 +1,4 @@
-import { defineConfig } from '@playwright/test';
+import {defineConfig, devices} from '@playwright/test';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -19,7 +19,7 @@ export default defineConfig({
     use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
         baseURL: 'https://drpt-external-dev.myshopify.com/',
-
+        viewport: null,
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry'
     },
@@ -30,7 +30,6 @@ export default defineConfig({
             name: 'Google Chrome',
             use: {
                 channel: 'chrome',
-                viewport: null,
                 launchOptions: {
                     args: ['--start-maximized']
                 }
